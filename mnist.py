@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import struct as st
 
@@ -24,16 +25,14 @@ def process_label_file(label_file):
     labels = np.zeros((n_labels))
     labels = np.asarray(st.unpack('>' + 'B' * n_labels, label_file.read(n_labels)))
 
-    return labels
+    targets = np.array([labels]).reshape(-1)
 
-def one_hot(number, size):
-    onehot = np.zeros(size)
-    onehot[number] = 1
+    one_hot_labels = np.eye(10)[targets]
 
-    return onehot
+    return one_hot_labels
 
 def dataset():
-    home = './dataset/'
+    home = os.path.expanduser('~') + '/Datasets/'
 
     test_images = open(home + 't10k-images-idx3-ubyte', 'rb')
     test_labels = open(home + 't10k-labels-idx1-ubyte', 'rb')
